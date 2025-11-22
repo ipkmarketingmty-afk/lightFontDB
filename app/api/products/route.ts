@@ -16,10 +16,14 @@ export async function GET(request: NextRequest) {
       'SELECT id, name, description, price, stock, status, image, created_at, updated_at FROM products ORDER BY created_at DESC'
     )
     
-    const products = result.rows.map((row) => ({
-      ...row,
-      image: row.image ? `data:image/jpeg;base64,${row.image.toString('base64')}` : null,
-    }))
+   const products = result.rows.map((row) => ({
+  ...row,
+  price: row.price !== null ? Number(row.price) : 0,
+  stock: row.stock !== null ? Number(row.stock) : 0,
+  status: row.status ?? 'activo',
+  image: row.image ? `data:image/jpeg;base64,${row.image.toString('base64')}` : null,
+}))
+
     
     await pool.end()
     return NextResponse.json({ products })
