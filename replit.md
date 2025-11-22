@@ -6,9 +6,10 @@ Sistema de gestión de inventario con Next.js 14+ y PostgreSQL externo.
 
 - **Conexión Dinámica a PostgreSQL**: Sistema de login que permite conectarse a cualquier base de datos PostgreSQL proporcionando credenciales
 - **Gestión de Imágenes BYTEA**: Las imágenes se almacenan como datos binarios directamente en PostgreSQL y se convierten automáticamente a Base64
-- **CRUD Completo**: Crear, leer, actualizar y eliminar productos con nombre, descripción, precio, stock e imagen
-- **Diseño Pure Black Mode**: Estética minimalista con fondo #000000, tarjetas #0A0A0A, bordes #262626, texto #EDEDED
-- **Inicialización Automática**: Botón para crear la tabla `products` si no existe en la base de datos
+- **CRUD Completo**: Crear, leer, actualizar y eliminar productos con nombre, descripción, precio, stock, estado e imagen
+- **Estado de Productos**: Cada producto tiene un estado (activo/inactivo) con indicadores visuales en verde/rojo
+- **Diseño Limpio**: Interfaz moderna con fondo blanco (#F8F9FA), detalles en azul marino (#003366), y elementos claros
+- **Inicialización y Migración**: Botones para crear la tabla `products` y migrar esquemas existentes agregando el campo `status`
 
 ## Stack Tecnológico
 
@@ -30,6 +31,7 @@ Sistema de gestión de inventario con Next.js 14+ y PostgreSQL externo.
     /products
       /[id] - API para editar/eliminar productos individuales
       /init-table - API para crear tabla products
+      /migrate-status - API para agregar columna status a tablas existentes
       route.ts - API para listar/crear productos
   /inventory - Página principal del inventario
   layout.tsx - Layout raíz
@@ -83,18 +85,24 @@ CREATE TABLE products (
   description TEXT,
   price DECIMAL(10, 2) NOT NULL DEFAULT 0,
   stock INTEGER NOT NULL DEFAULT 0,
+  status VARCHAR(20) NOT NULL DEFAULT 'activo',
   image BYTEA,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
+### Migración de Esquemas Existentes
+
+Si tienes una base de datos existente sin la columna `status`, usa el botón "Migrar Estado" en la interfaz para agregar automáticamente la columna a tu tabla.
+
 ## Uso
 
 1. Accede a la aplicación
 2. Ingresa las credenciales de tu base de datos PostgreSQL
 3. Si la tabla no existe, haz clic en "Crear Tabla"
-4. Comienza a gestionar tu inventario
+4. Si tienes una tabla existente sin la columna `status`, haz clic en "Migrar Estado"
+5. Comienza a gestionar tu inventario con estados activo/inactivo
 
 ## Desarrollo
 
