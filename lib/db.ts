@@ -120,6 +120,7 @@ export async function ensureProductsTable(pool: Pool): Promise<void> {
       description TEXT,
       price DECIMAL(10, 2) NOT NULL DEFAULT 0,
       stock INTEGER NOT NULL DEFAULT 0,
+      status VARCHAR(20) NOT NULL DEFAULT 'activo',
       image BYTEA,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

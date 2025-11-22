@@ -9,11 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'vault-black': '#000000',
-        'vault-card': '#0A0A0A',
-        'vault-border': '#262626',
-        'vault-text': '#EDEDED',
-        'vault-gray': '#404040',
+        'vault-white': '#FFFFFF',
+        'vault-bg': '#F8F9FA',
+        'vault-card': '#FFFFFF',
+        'vault-border': '#003D82',
+        'vault-text': '#1A1A1A',
+        'vault-navy': '#001F3F',
+        'vault-navy-light': '#003D82',
+        'vault-navy-hover': '#005BB5',
       },
     },
   },

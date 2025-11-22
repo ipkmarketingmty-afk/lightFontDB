@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   
   try {
     const result = await pool.query(
-      'SELECT id, name, description, price, stock, image, created_at, updated_at FROM products ORDER BY created_at DESC'
+      'SELECT id, name, description, price, stock, status, image, created_at, updated_at FROM products ORDER BY created_at DESC'
     )
     
     const products = result.rows.map((row) => ({
@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
     const description = formData.get('description') as string
     const price = parseFloat(formData.get('price') as string)
     const stock = parseInt(formData.get('stock') as string)
+    const status = (formData.get('status') as string) || 'activo'
     const imageFile = formData.get('image') as File | null
     
     let imageBuffer: Buffer | null = null
@@ -63,8 +64,8 @@ export async function POST(request: NextRequest) {
     }
     
     const result = await pool.query(
-      'INSERT INTO products (name, description, price, stock, image) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, description, price, stock, imageBuffer]
+      'INSERT INTO products (name, description, price, stock, status, image) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [name, description, price, stock, status, imageBuffer]
     )
     
     const product = result.rows[0]

@@ -14,6 +14,7 @@ export default function AddProductModal({ onClose, onSave }: AddProductModalProp
     description: '',
     price: '',
     stock: '0',
+    status: 'activo',
   })
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
@@ -40,6 +41,7 @@ export default function AddProductModal({ onClose, onSave }: AddProductModalProp
       form.append('description', formData.description)
       form.append('price', formData.price)
       form.append('stock', formData.stock)
+      form.append('status', formData.status)
       
       if (imageFile) {
         form.append('image', imageFile)
@@ -65,11 +67,11 @@ export default function AddProductModal({ onClose, onSave }: AddProductModalProp
   }
   
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="card-vault max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Nuevo Producto</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
+          <h2 className="text-2xl font-bold text-vault-navy">Nuevo Producto</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-vault-navy">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -78,8 +80,8 @@ export default function AddProductModal({ onClose, onSave }: AddProductModalProp
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Imagen del Producto</label>
-            <div className="aspect-video bg-vault-black rounded-lg mb-3 overflow-hidden">
+            <label className="block text-sm font-medium mb-2 text-vault-navy">Imagen del Producto</label>
+            <div className="aspect-video bg-gray-100 rounded-lg mb-3 overflow-hidden">
               {previewUrl ? (
                 <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
               ) : (
@@ -143,6 +145,40 @@ export default function AddProductModal({ onClose, onSave }: AddProductModalProp
                 onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                 required
               />
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">Estado del Producto</label>
+            <div className="flex gap-4">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="status"
+                  value="activo"
+                  checked={formData.status === 'activo'}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  className="w-4 h-4 text-green-600 focus:ring-green-500"
+                />
+                <span className="ml-2 flex items-center">
+                  <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                  Activo
+                </span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="status"
+                  value="inactivo"
+                  checked={formData.status === 'inactivo'}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  className="w-4 h-4 text-red-600 focus:ring-red-500"
+                />
+                <span className="ml-2 flex items-center">
+                  <span className="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                  Inactivo
+                </span>
+              </label>
             </div>
           </div>
           

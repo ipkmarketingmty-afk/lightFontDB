@@ -4,28 +4,28 @@
 
 @layer base {
   * {
-    @apply border-vault-border;
+    @apply border-gray-200;
   }
   
   body {
-    @apply bg-vault-black text-vault-text;
+    @apply bg-vault-bg text-vault-text;
   }
 }
 
 @layer components {
   .input-vault {
-    @apply w-full px-4 py-3 bg-vault-card border border-vault-border rounded-lg text-vault-text placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-vault-gray transition-all;
+    @apply w-full px-4 py-3 bg-white border-2 border-vault-navy-light rounded-lg text-vault-text placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-vault-navy focus:border-vault-navy transition-all;
   }
   
   .btn-vault {
-    @apply px-6 py-3 bg-vault-card border border-vault-border rounded-lg text-vault-text hover:bg-vault-gray transition-all font-medium;
+    @apply px-6 py-3 bg-white border-2 border-vault-navy-light rounded-lg text-vault-navy hover:bg-vault-navy hover:text-white transition-all font-medium;
   }
   
   .btn-vault-primary {
-    @apply px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition-all font-medium;
+    @apply px-6 py-3 bg-vault-navy text-white rounded-lg hover:bg-vault-navy-hover transition-all font-medium;
   }
   
   .card-vault {
-    @apply bg-vault-card border border-vault-border rounded-lg p-6;
+    @apply bg-vault-card border-2 border-vault-navy-light rounded-lg p-6 shadow-sm;
   }
 }

@@ -21,11 +21,12 @@ export async function PUT(
     const description = formData.get('description') as string
     const price = parseFloat(formData.get('price') as string)
     const stock = parseInt(formData.get('stock') as string)
+    const status = (formData.get('status') as string) || 'activo'
     const imageFile = formData.get('image') as File | null
     const keepImage = formData.get('keepImage') === 'true'
     
-    let query = 'UPDATE products SET name = $1, description = $2, price = $3, stock = $4, updated_at = CURRENT_TIMESTAMP'
-    const values: any[] = [name, description, price, stock]
+    let query = 'UPDATE products SET name = $1, description = $2, price = $3, stock = $4, status = $5, updated_at = CURRENT_TIMESTAMP'
+    const values: any[] = [name, description, price, stock, status]
     
     if (imageFile && imageFile.size > 0) {
       if (imageFile.size > 5 * 1024 * 1024) {
@@ -38,13 +39,13 @@ export async function PUT(
       
       const arrayBuffer = await imageFile.arrayBuffer()
       const imageBuffer = Buffer.from(arrayBuffer)
-      query += ', image = $5 WHERE id = $6 RETURNING *'
+      query += ', image = $6 WHERE id = $7 RETURNING *'
       values.push(imageBuffer, id)
     } else if (!keepImage) {
-      query += ', image = NULL WHERE id = $5 RETURNING *'
+      query += ', image = NULL WHERE id = $6 RETURNING *'
       values.push(id)
     } else {
-      query += ' WHERE id = $5 RETURNING *'
+      query += ' WHERE id = $6 RETURNING *'
       values.push(id)
     }
     

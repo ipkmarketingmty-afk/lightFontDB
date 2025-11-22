@@ -12,6 +12,7 @@ interface Product {
   description: string
   price: number
   stock: number
+  status: string
   image: string | null
   created_at: string
   updated_at: string
@@ -77,6 +78,27 @@ export default function InventoryClient() {
     }
   }
   
+  const handleMigrate = async () => {
+    if (!confirm('¿Deseas agregar la columna "status" a la tabla products?')) return
+    
+    setInitializingTable(true)
+    try {
+      const response = await fetch('/api/products/migrate-status', { method: 'POST' })
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error)
+      }
+      
+      alert(data.message)
+      await fetchProducts()
+    } catch (err: any) {
+      alert('Error: ' + err.message)
+    } finally {
+      setInitializingTable(false)
+    }
+  }
+  
   const handleDelete = async (id: number) => {
     if (!confirm('¿Estás seguro de eliminar este producto?')) return
     
@@ -99,17 +121,24 @@ export default function InventoryClient() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">BlackVault Inventory</h1>
-            <p className="text-gray-400">{products.length} productos en inventario</p>
+            <h1 className="text-3xl font-bold mb-2 text-vault-navy">BlackVault Inventory</h1>
+            <p className="text-gray-600">{products.length} productos en inventario</p>
           </div>
           
           <div className="flex gap-3">
             <button
               onClick={handleInitTable}
-              className="btn-vault"
+              className="btn-vault text-sm"
               disabled={initializingTable}
             >
               {initializingTable ? 'Inicializando...' : 'Crear Tabla'}
+            </button>
+            <button
+              onClick={handleMigrate}
+              className="btn-vault text-sm"
+              disabled={initializingTable}
+            >
+              Migrar Estado
             </button>
             <button onClick={() => setShowAddModal(true)} className="btn-vault-primary">
               + Nuevo Producto
@@ -121,26 +150,32 @@ export default function InventoryClient() {
         </div>
         
         {error && error.includes('does not exist') && (
-          <div className="mb-6 p-4 bg-yellow-950 border border-yellow-800 rounded-lg text-yellow-200">
-            <p className="font-medium mb-2">La tabla "products" no existe</p>
-            <p className="text-sm mb-3">Haz clic en "Crear Tabla" para inicializar la base de datos.</p>
+          <div className="mb-6 p-4 bg-yellow-50 border-2 border-yellow-500 rounded-lg text-yellow-800">
+            <p className="font-medium mb-2">
+              {error.includes('column') ? 'La columna "status" no existe' : 'La tabla "products" no existe'}
+            </p>
+            <p className="text-sm mb-3">
+              {error.includes('column') 
+                ? 'Haz clic en "Migrar Estado" para agregar la columna a tu tabla existente.' 
+                : 'Haz clic en "Crear Tabla" para inicializar la base de datos.'}
+            </p>
           </div>
         )}
         
         {error && !error.includes('does not exist') && (
-          <div className="mb-6 p-4 bg-red-950 border border-red-800 rounded-lg text-red-200">
+          <div className="mb-6 p-4 bg-red-50 border-2 border-red-500 rounded-lg text-red-800">
             {error}
           </div>
         )}
         
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent"></div>
-            <p className="mt-4 text-gray-400">Cargando productos...</p>
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-vault-navy border-r-transparent"></div>
+            <p className="mt-4 text-gray-600">Cargando productos...</p>
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-12 card-vault">
-            <p className="text-gray-400 mb-4">No hay productos en el inventario</p>
+            <p className="text-gray-600 mb-4">No hay productos en el inventario</p>
             <button onClick={() => setShowAddModal(true)} className="btn-vault-primary">
               Agregar Primer Producto
             </button>

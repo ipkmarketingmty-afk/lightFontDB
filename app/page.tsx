@@ -14,12 +14,12 @@ export default async function HomePage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2">BlackVault</h1>
-          <p className="text-gray-400">Inventory Management System</p>
+          <h1 className="text-4xl font-bold mb-2 text-vault-navy">BlackVault</h1>
+          <p className="text-gray-600">Inventory Management System</p>
         </div>
         
         <div className="card-vault">
-          <h2 className="text-xl font-semibold mb-6">Conexión a Base de Datos</h2>
+          <h2 className="text-xl font-semibold mb-6 text-vault-navy">Conexión a Base de Datos</h2>
           <LoginForm />
         </div>
       </div>
