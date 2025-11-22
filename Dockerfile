@@ -1,9 +1,8 @@
 FROM node:20-alpine AS base
 
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
+RUN apk add --no-cache libc6-compat
 COPY package.json package-lock.json* ./
 RUN npm ci
 
@@ -11,6 +10,9 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+ARG SESSION_SECRET
+ENV SESSION_SECRET=${SESSION_SECRET}
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -22,22 +24,10 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-COPY --from=builder /app/public ./public
+USER node
 
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-
-EXPOSE 5000
-
-ENV PORT=5000
-ENV HOSTNAME="0.0.0.0"
-
+EXPOSE 3000
 CMD ["node", "server.js"]
